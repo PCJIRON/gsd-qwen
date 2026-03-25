@@ -1,0 +1,6 @@
+{
+  "name": "gsd-qwen",
+  "version": "1.0.0",
+  "description": "Get Shit Done - Spec-driven development system for Qwen Code",
+  "commands": ["commands/gsd"]
+}
