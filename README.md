@@ -210,12 +210,6 @@ Step-by-step instructions
 
 ---
 
-## License
-
-MIT
-
----
-
 ## Credits
 
 Based on [GSD (Get Shit Done)](https://github.com/gsd-build/get-shit-done) for Claude Code.
