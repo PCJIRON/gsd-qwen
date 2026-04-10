@@ -2,52 +2,43 @@
 name: gsd:new-workspace
 description: Create isolated workspace with repo copies (worktrees or clones)
 ---
-<context>
-**Purpose:**
-Create an isolated workspace for parallel development.
-Uses git worktrees or clones for multi-repo workflows.
-</context>
 
-<objective>
-Create new isolated workspace.
+# /gsd:new-workspace
 
-**Creates:**
-- New workspace directory
-- Git worktree or clone
-- Independent `.planning/` directory
+## Purpose
 
-**After this command:**
-- Workspace ready for parallel work
-- Can switch between workspaces
-</objective>
+Create an isolated workspace for parallel development. Uses git worktrees or clones for multi-repo workflows.
 
-<execution_context>
-.planning/STATE.md
-git rev-parse --git-dir
-</execution_context>
+## Process
 
-<process>
-1. Ask user for workspace details:
+1. **Ask user for workspace details**:
    - Workspace name?
    - Purpose (feature, experiment, bugfix)?
    - Use worktree or clone?
-2. Determine workspace location:
+
+2. **Determine workspace location**:
    - Default: `../{workspace-name}/`
    - Or custom path
-3. Create workspace:
+
+3. **Create workspace**:
+
    **Option A: Git Worktree** (recommended for same repo)
    ```bash
    git worktree add ../{workspace-name} -b {feature-branch}
    ```
+
    **Option B: Clone** (recommended for different repos)
    ```bash
    git clone . ../{workspace-name}
    ```
-4. Initialize workspace:
+
+4. **Initialize workspace**:
    - Copy `.planning/config.json`
    - Create fresh `STATE.md`
    - Link to parent project
-5. Create workspace manifest:
+
+5. **Create workspace manifest**:
+
    ```json
    {
      "name": "{workspace-name}",
@@ -58,23 +49,31 @@ git rev-parse --git-dir
      "purpose": "{purpose}"
    }
    ```
-6. Register workspace in parent:
-   - Add to `.planning/WORKSPACES.md`
-7. Create commit (in parent): `[GSD] Create workspace: {name}`
-8. Provide next steps:
+
+6. **Register workspace** in parent: Add to `.planning/WORKSPACES.md`
+
+7. **Create commit** (in parent): `[GSD] Create workspace: {name}`
+
+8. **Provide next steps**:
+
    ```markdown
    # Workspace Created
-   
+
    **Name:** {name}
    **Location:** {path}
    **Branch:** {branch}
-   
+
    ## Next Steps
    1. `cd {path}`
    2. Run `/gsd:new-project` or `/gsd:new-milestone`
    3. Start work
-   
+
    ## Switch Back
    `cd {parent-path}`
    ```
-</process>
+
+## After this command
+
+- Workspace created
+- Ready to start parallel work
+- Can switch back to parent anytime

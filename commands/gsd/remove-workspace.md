@@ -2,35 +2,19 @@
 name: gsd:remove-workspace
 description: Remove workspace and clean up worktrees
 ---
-<context>
-**Arguments:**
+
+# /gsd:remove-workspace
+
+## Arguments
+
 - `name` — Workspace name to remove
 
-**Purpose:**
+## Purpose
+
 Remove a workspace and clean up associated git worktrees or clones.
-</context>
 
-<objective>
-Remove workspace and clean up.
+## Process
 
-**Actions:**
-- Delete workspace directory (for clones)
-- Remove git worktree
-- Update WORKSPACES.md
-
-**After this command:**
-- Workspace removed
-- No orphaned worktrees
-- Registry updated
-</objective>
-
-<execution_context>
-.planning/WORKSPACES.md
-.planning/WORKSPACES.json
-git worktree list
-</execution_context>
-
-<process>
 1. Load WORKSPACES.md
 2. Find workspace by name:
    - If not found: "Workspace '{name}' not registered"
@@ -41,21 +25,21 @@ git worktree list
 4. Show removal preview:
    ```markdown
    # Workspace Removal Preview
-   
+
    **Workspace:** {name}
    **Type:** {worktree|clone}
    **Location:** {path}
    **Branch:** {branch}
-   
+
    ## Actions
    - Remove git worktree: `git worktree remove {path}`
    - Delete directory: {path}
    - Update WORKSPACES.md: Remove entry
-   
+
    ## Warning
    - Uncommitted changes will be LOST
    - Check workspace for pending work
-   
+
    **Proceed? (y/n)**
    ```
 5. If confirmed:
@@ -69,4 +53,9 @@ git worktree list
 8. If worktree removal fails:
    - Provide manual commands to run
    - "Run: `git worktree remove {path} --force`"
-</process>
+
+## After this command
+
+- Workspace removed
+- No orphaned worktrees
+- Registry updated

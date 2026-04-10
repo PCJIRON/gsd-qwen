@@ -1,90 +1,35 @@
 ---
 name: gsd:health
-description: Validate .planning/ directory integrity, auto-repair with --repair
+description: Validate .planning/ directory integrity
 argument-hint: "[--repair]"
 ---
-<context>
-**Flags:**
-- `--repair` — Auto-fix issues found
 
-**Purpose:**
-Validate the health of the `.planning/` directory.
-Catches corruption, missing files, and inconsistencies.
-</context>
+# /gsd:health [--repair]
 
-<objective>
-Check and optionally repair planning directory health.
+Validate `.planning/` directory integrity and optionally repair issues.
 
-**Checks:**
-- Required files exist
-- File format valid
-- State consistent
-- Git history intact
+## Flags
 
-**After this command:**
-- Health report generated
-- Issues identified
-- Optional: Auto-repaired
-</objective>
+- `--repair` — Auto-fix detected issues
 
-<execution_context>
-.planning/
-.planning/STATE.md
-.planning/PROJECT.md
-.planning/ROADMAP.md
-.git/
-</execution_context>
+## Process
 
-<process>
-1. Scan `.planning/` directory:
-   - List all files
-   - Check file sizes
-   - Check last modified dates
-2. Validate required files:
-   - STATE.md (exists, valid JSON frontmatter)
-   - PROJECT.md (exists, has content)
-   - ROADMAP.md (exists, has phases)
-   - config.json (if exists, valid JSON)
-3. Check consistency:
-   - STATE.md phase count matches ROADMAP.md
-   - All referenced files exist
-   - No orphaned files
-4. Check git history:
-   - `.planning/` commits present
-   - No corrupted commits
-5. Generate health report:
-   ```markdown
-   # Health Report
-   
-   ## Status: {HEALTHY|WARNINGS|CRITICAL}
-   
-   ### ✅ Healthy
-   - STATE.md: Valid
-   - PROJECT.md: Valid
-   - ROADMAP.md: Valid
-   
-   ### ⚠️ Warnings
-   - {warning 1}
-   - {warning 2}
-   
-   ### ❌ Critical
-   - {issue 1}
-   - {issue 2}
-   
-   ## Recommendations
-   1. {action 1}
-   2. {action 2}
-   ```
-6. If `--repair` flag:
-   - Backup `.planning/` to `.planning.backup/`
-   - Fix auto-repairable issues:
-     - Rebuild STATE.md from other files
-     - Remove orphaned files
-     - Fix malformed JSON
-   - Report what was fixed
-7. Save report to `.planning/HEALTH-REPORT.md`
-8. Create commit (if repairs): `[GSD] Health check and repair`
-9. If critical issues:
-   - Warn user
-   - Suggest: "Restore from backup or run `/gsd:debug`"
-</process>
+1. Check `.planning/` directory exists
+2. Verify required files: PROJECT.md, REQUIREMENTS.md, ROADMAP.md, STATE.md, config.json
+3. Check phase file consistency:
+   - CONTEXT files have matching PLAN files
+   - PLAN files have matching SUMMARY files
+   - SUMMARY files have matching UAT files
+4. Validate STATE.md references valid files
+5. Check for orphaned files (not referenced by STATE.md)
+6. Check git integrity: planning commits match STATE.md
+7. Display health report:
+   - ✅ Healthy files
+   - ⚠️ Warnings (missing optional files)
+   - ❌ Errors (missing required files, broken references)
+8. If `--repair` flag:
+   - Create missing STATE.md entries
+   - Remove orphaned files (with confirmation)
+   - Fix broken references
+
+**Output:** Health score, issues found, actions taken (if --repair).

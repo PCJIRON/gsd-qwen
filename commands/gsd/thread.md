@@ -3,33 +3,23 @@ name: gsd:thread
 description: Persistent context threads — lightweight cross-session knowledge for work spanning multiple sessions
 argument-hint: "[name]"
 ---
-<context>
-**Arguments:**
+
+# /gsd:thread
+
+## Arguments
+
 - `name` — Thread name (optional, creates new if not found)
 
-**Purpose:**
-Maintain persistent context across sessions for long-running work.
-Threads store knowledge, decisions, and patterns that should persist.
-</context>
+## Purpose
 
-<objective>
-Create, view, or update context threads.
+Maintain persistent context across sessions for long-running work. Threads store knowledge, decisions, and patterns that should persist.
 
-**Creates/Updates:**
+## What This Creates/Updates
+
 - `.planning/threads/{name}.md` — Thread content
 
-**After this command:**
-- Thread created/updated
-- Context persisted across sessions
-- Available for future sessions
-</objective>
+## Process
 
-<execution_context>
-.planning/threads/
-.planning/STATE.md
-</execution_context>
-
-<process>
 1. Check if thread name provided:
    - If yes: Load or create thread
    - If no: List all threads
@@ -38,12 +28,12 @@ Create, view, or update context threads.
    - List all threads:
      ```markdown
      # Context Threads
-     
+
      | Thread | Created | Updated | Size |
      |--------|---------|---------|------|
      | auth-system | 2026-03-20 | 2026-03-25 | 2.3 KB |
      | api-conventions | 2026-03-21 | 2026-03-24 | 1.5 KB |
-     
+
      ## Actions
      - View thread: `/gsd:thread {name}`
      - Create thread: `/gsd:thread {name}`
@@ -56,13 +46,13 @@ Create, view, or update context threads.
 4. Display thread content:
    ```markdown
    # Thread: {name}
-   
+
    **Created:** {date}
    **Updated:** {date}
-   
+
    ## Content
    {thread content}
-   
+
    ## Actions
    - Add to thread: Type your addition
    - Edit thread: Open `.planning/threads/{name}.md`
@@ -77,4 +67,9 @@ Create, view, or update context threads.
 8. Confirm:
    - "Thread '{name}' updated"
    - "Thread auto-loads in future sessions"
-</process>
+
+## After this command
+
+- Thread created/updated
+- Context persisted across sessions
+- Available for future sessions

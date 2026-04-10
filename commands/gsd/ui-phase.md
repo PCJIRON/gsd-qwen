@@ -3,35 +3,23 @@ name: gsd:ui-phase
 description: Generate UI design contract (UI-SPEC.md) for frontend phases
 argument-hint: "[N]"
 ---
-<context>
-**Arguments:**
+
+# /gsd:ui-phase
+
+## Arguments
+
 - `N` — Phase number (must be frontend/UI phase)
 
-**Purpose:**
-Create a UI design contract before implementing frontend work.
-Defines layout, components, interactions, and visual style.
-</context>
+## Purpose
 
-<objective>
-Generate UI design specification.
+Create a UI design contract before implementing frontend work. Defines layout, components, interactions, and visual style.
 
-**Creates:**
+## What This Creates
+
 - `.planning/{N}-UI-SPEC.md` — UI design contract
 
-**After this command:**
-- UI spec ready
-- Clear visual requirements
-- Run `/gsd:execute-phase {N}` with spec
-</objective>
+## Process
 
-<execution_context>
-.planning/ROADMAP.md
-.planning/{N}-CONTEXT.md (if exists)
-.planning/{N}-*-PLAN.md (phase plans)
-@agents/gsd-ui-researcher.md
-</execution_context>
-
-<process>
 1. Validate phase N is frontend/UI:
    - Check ROADMAP.md phase description
    - If not UI phase: "Phase {N} is not UI-focused. Proceed anyway?"
@@ -44,42 +32,42 @@ Generate UI design specification.
 4. Generate UI spec:
    ```markdown
    # UI Specification: Phase {N}
-   
+
    ## Overview
    - **Feature:** {feature name}
    - **Users:** {target users}
    - **Goal:** {ui goal}
-   
+
    ## Layout
    - **Structure:** {wireframe description}
    - **Grid:** {grid system}
    - **Responsive:** {breakpoints}
-   
+
    ## Components
    | Component | Purpose | Props | State |
    |-----------|---------|-------|-------|
    | {Component1} | {purpose} | {props} | {state} |
-   
+
    ## Interactions
    - **Click:** {behavior}
    - **Hover:** {behavior}
    - **Loading:** {state}
    - **Error:** {state}
-   
+
    ## Visual Style
    - **Colors:** {palette}
    - **Typography:** {fonts}
    - **Spacing:** {scale}
    - **Shadows:** {elevation}
-   
+
    ## Accessibility
    - **ARIA:** {requirements}
    - **Keyboard:** {nav pattern}
    - **Screen Reader:** {support}
-   
+
    ## Empty States
    - {description}
-   
+
    ## Edge Cases
    - {case 1}
    - {case 2}
@@ -90,4 +78,9 @@ Generate UI design specification.
    - "Review spec: Open `{N}-UI-SPEC.md`"
    - "Execute: Run `/gsd:execute-phase {N}`"
    - "Audit existing: Run `/gsd:ui-review {N}`"
-</process>
+
+## After this command
+
+- UI spec ready
+- Clear visual requirements
+- Run `/gsd:execute-phase {N}` with spec

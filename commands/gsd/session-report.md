@@ -2,36 +2,19 @@
 name: gsd:session-report
 description: Generate session summary with work performed and outcomes
 ---
-<context>
-**Purpose:**
-Generate a summary report of what was accomplished in the current session.
-Useful for:
+
+# /gsd:session-report
+
+## Purpose
+
+Generate a summary report of what was accomplished in the current session. Useful for:
 - Daily standups
 - Progress tracking
 - Time reporting
 - Documentation
-</context>
 
-<objective>
-Generate session report.
+## Process
 
-**Output:**
-- Session summary document
-- Work performed
-- Outcomes and deliverables
-
-**After this command:**
-- Report saved to `.planning/SESSION-REPORT.md`
-- Can share with team/stakeholders
-</objective>
-
-<execution_context>
-.planning/STATE.md
-git log --since="today"
-.planning/
-</execution_context>
-
-<process>
 1. Determine session start time:
    - From STATE.md (last updated timestamp)
    - Or from first git commit of session
@@ -47,40 +30,40 @@ git log --since="today"
 4. Generate report:
    ```markdown
    # Session Report
-   
+
    **Date:** {date}
    **Duration:** {start} - {end} ({duration})
-   
+
    ## Summary
    - **Phase:** {start} → {current}
    - **Plans Completed:** {count}
    - **Commits:** {count}
    - **Files Changed:** {count}
-   
+
    ## Work Performed
-   
+
    ### Commits
    | Hash | Message |
    |------|---------|
    | abc123 | feat: Add login endpoint |
    | def456 | test: Add auth tests |
-   
+
    ### Plans Completed
    - Plan {N}-{M}: {title}
    - Plan {N}-{M+1}: {title}
-   
+
    ### Files Changed
    - src/auth/login.ts
    - tests/auth.test.ts
-   
+
    ## Outcomes
    - ✅ Login endpoint implemented
    - ✅ Tests passing
    - ⏳ Logout pending (next session)
-   
+
    ## Blockers
    - {any blockers encountered}
-   
+
    ## Next Session
    - Continue with Plan {N}-{M+2}
    - Complete logout functionality
@@ -89,4 +72,8 @@ git log --since="today"
 6. Create commit: `[GSD] Session report {date}`
 7. Display report to user
 8. Offer to share/export
-</process>
+
+## After this command
+
+- Report saved to `.planning/SESSION-REPORT.md`
+- Can share with team/stakeholders

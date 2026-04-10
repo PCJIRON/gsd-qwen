@@ -3,34 +3,24 @@ name: gsd:pause-work
 description: Create handoff when stopping mid-phase (writes HANDOFF.json)
 argument-hint: "[message]"
 ---
-<context>
-**Arguments:**
+
+# /gsd:pause-work
+
+## Arguments
+
 - `message` — Optional note about where you're stopping
 
-**Purpose:**
-Create a clean handoff when you need to stop work mid-phase.
-Allows you (or another session) to resume exactly where you left off.
-</context>
+## Purpose
 
-<objective>
-Create handoff documentation for session pause.
+Create a clean handoff when you need to stop work mid-phase. Allows you (or another session) to resume exactly where you left off.
 
-**Creates:**
+## What This Creates
+
 - `.planning/HANDOFF.json` — Resume point and context
 - `.planning/PAUSE-MESSAGE.md` — Optional human-readable note
 
-**After this command:**
-- Safe to stop work
-- Next session can run `/gsd:resume-work`
-</objective>
+## Process
 
-<execution_context>
-.planning/STATE.md
-.planning/
-git status
-</execution_context>
-
-<process>
 1. Load current state from STATE.md
 2. Capture current context:
    - Current phase and plan number
@@ -58,12 +48,12 @@ git status
 5. If message provided, create PAUSE-MESSAGE.md:
    ```markdown
    # Pause Note
-   
+
    **Stopped at:** {timestamp}
-   
+
    **Context:**
    {user's message}
-   
+
    **Next steps:**
    1. Complete validation logic in {file}
    2. Run tests
@@ -72,4 +62,8 @@ git status
 6. Stage handoff files: `git add .planning/HANDOFF.json`
 7. Create commit (if changes): `[GSD] Pause work - phase {N}, plan {M}`
 8. Confirm: "Work paused. Run `/gsd:resume-work` to continue."
-</process>
+
+## After this command
+
+- Safe to stop work
+- Next session can run `/gsd:resume-work`

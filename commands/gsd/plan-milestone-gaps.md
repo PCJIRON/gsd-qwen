@@ -3,34 +3,24 @@ name: gsd:plan-milestone-gaps
 description: Create phases to close gaps identified in milestone audit
 argument-hint: "[N]"
 ---
-<context>
-**Arguments:**
+
+# /gsd:plan-milestone-gaps
+
+## Arguments
+
 - `N` — Milestone number to plan gaps for (default: current)
 
-**Purpose:**
+## Purpose
+
 After an audit identifies gaps, automatically create phases to close them.
-</context>
 
-<objective>
-Create phases to address gaps identified in milestone audit.
+## What This Creates
 
-**Creates:**
 - New phases in ROADMAP.md
 - Gap closure plans
 
-**After this command:**
-- Gap closure phases added
-- Run `/gsd:execute-phase {N}` to close gaps
-</objective>
+## Process
 
-<execution_context>
-.planning/STATE.md
-.planning/REQUIREMENTS.md
-.planning/ROADMAP.md
-.planning/*-AUDIT.md (audit reports)
-</execution_context>
-
-<process>
 1. Run `/gsd:audit-milestone` if not recently done
 2. Load audit report and identify gaps:
    - Failed requirements
@@ -58,4 +48,8 @@ Create phases to address gaps identified in milestone audit.
 8. Create commit: `[GSD] Add gap closure phases`
 9. Suggest next step: `/gsd:execute-phase {N}`
 10. Note: These phases are P0 - should be completed before milestone
-</process>
+
+## After this command
+
+- Gap closure phases added
+- Run `/gsd:execute-phase {N}` to close gaps

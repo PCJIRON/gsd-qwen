@@ -3,36 +3,25 @@ name: gsd:add-tests
 description: Add tests to completed work that lacks test coverage
 argument-hint: "[phase|file]"
 ---
-<context>
-**Arguments:**
+
+# /gsd:add-tests
+
+## Arguments
+
 - `phase` — Phase number to add tests for
 - `file` — Specific file to add tests for
 
-**Purpose:**
-Add tests to code that was implemented without tests.
-Useful for quick mode executions or when tests were skipped.
-</context>
+## Purpose
 
-<objective>
-Add tests to existing code.
+Add tests to code that was implemented without tests. Useful for quick mode executions or when tests were skipped.
 
-**Creates:**
+## What This Creates
+
 - Test files for target code
 - Test commit
 
-**After this command:**
-- Code covered by tests
-- Test commit created
-- Coverage improved
-</objective>
+## Process
 
-<execution_context>
-.planning/STATE.md
-Target source files
-Existing test files (for patterns)
-</execution_context>
-
-<process>
 1. Determine target:
    - If phase specified: Find all untested files in phase
    - If file specified: Test that file
@@ -50,19 +39,19 @@ Existing test files (for patterns)
    ```typescript
    // {file}.test.ts
    import { functionToTest } from './{file}';
-   
+
    describe('{functionName}', () => {
      it('should {expected behavior}', () => {
        // Arrange
        const input = {...};
-       
+
        // Act
        const result = functionToTest(input);
-       
+
        // Assert
        expect(result).toEqual({...});
      });
-     
+
      it('should handle edge case', () => {
        // Test edge case
      });
@@ -78,4 +67,9 @@ Existing test files (for patterns)
    - "Tests added: {count}"
    - "Coverage: {before}% → {after}%"
    - "All tests passing"
-</process>
+
+## After this command
+
+- Code covered by tests
+- Test commit created
+- Coverage improved

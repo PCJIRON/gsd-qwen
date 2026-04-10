@@ -2,32 +2,15 @@
 name: gsd:complete-milestone
 description: Archive current milestone, tag release, and prepare for next
 ---
-<context>
-**Purpose:**
+
+# /gsd:complete-milestone
+
+## Purpose
+
 Complete the current milestone, archive all artifacts, and optionally start the next milestone.
-</context>
 
-<objective>
-Complete milestone and prepare for next.
+## Process
 
-**Creates:**
-- Archived milestone files
-- Git tag for release
-- Optional: New milestone initialization
-
-**After this command:**
-- Current milestone archived
-- Release tagged
-- Ready for new milestone or maintenance
-</objective>
-
-<execution_context>
-.planning/STATE.md
-.planning/ROADMAP.md
-.planning/REQUIREMENTS.md
-</execution_context>
-
-<process>
 1. Load current milestone state from STATE.md
 2. Verify all phases complete:
    - Check all phases marked as "Done"
@@ -43,12 +26,12 @@ Complete milestone and prepare for next.
    - Create release summary:
      ```markdown
      # Milestone {N} Complete
-     
+
      ## Summary
      - Phases completed: X
      - Requirements delivered: Y
      - Commits: Z
-     
+
      ## Changelog
      - Feature 1
      - Feature 2
@@ -60,4 +43,9 @@ Complete milestone and prepare for next.
 6. Create commit: `[GSD] Complete milestone {N}`
 7. Ask: "Start next milestone? (y/n)"
 8. If yes: Run `/gsd:new-milestone`
-</process>
+
+## After this command
+
+- Current milestone archived
+- Release tagged
+- Ready for new milestone or maintenance

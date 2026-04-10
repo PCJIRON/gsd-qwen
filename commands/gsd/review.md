@@ -1,90 +1,30 @@
 ---
 name: gsd:review
-description: Cross-AI peer review of current phase or branch
-argument-hint: "[phase|branch]"
+description: Cross-AI peer review of completed work
+argument-hint: "[N]"
 ---
-<context>
-**Arguments:**
-- `phase` — Phase number to review (default: current)
-- `branch` — Git branch to review
 
-**Purpose:**
-Get an AI-powered peer review of completed work before shipping.
-Catches issues, suggests improvements, validates quality.
-</context>
+# /gsd:review [N]
 
-<objective>
-Conduct AI peer review of phase or branch.
+Cross-AI peer review of completed work. Checks code quality, architecture, tests, documentation, security, and performance.
 
-**Output:**
-- Review report with findings
-- Suggested improvements
-- Quality score
+## Arguments
 
-**After this command:**
-- If PASS: Ready to ship
-- If ISSUES: Address before shipping
-</objective>
+- `N` — Phase number to review (defaults to current phase)
 
-<execution_context>
-.planning/STATE.md
-.planning/{N}-*-SUMMARY.md
-git diff main
-@agents/gsd-integration-checker.md
-</execution_context>
+## Process
 
-<process>
-1. Determine review target:
-   - If phase specified: Load phase summaries
-   - If branch specified: Load branch diff
-   - Default: Current phase
-2. Load all relevant files:
-   - Phase summaries
-   - Changed files
-   - Test results (if any)
-3. Spawn integration checker agent to review:
-   - Code quality
-   - Architecture consistency
-   - Test coverage
-   - Documentation
-   - Security concerns
-   - Performance implications
-4. Generate review report:
-   ```markdown
-   # Review Report: Phase {N}
-   
-   ## Summary
-   - **Files Changed:** {count}
-   - **Lines Added:** {count}
-   - **Tests Added:** {count}
-   
-   ## Quality Checks
-   
-   ### ✅ Pass
-   - Code follows project conventions
-   - Tests cover main functionality
-   - Documentation updated
-   
-   ### ⚠️ Warnings
-   - Consider adding error handling in {file}
-   - Missing edge case test for {scenario}
-   
-   ### ❌ Issues
-   - Security: {issue}
-   - Performance: {issue}
-   
-   ## Suggestions
-   1. {improvement 1}
-   2. {improvement 2}
-   
-   ## Result: PASS with warnings
-   ```
-5. Save to `.planning/REVIEW-{phase}.md`
-6. Create commit (if review notes): `[GSD] Review phase {N}`
-7. If issues found:
-   - List commands to fix
-   - Suggest: "Fix issues, then run `/gsd:review` again"
-8. If pass:
-   - Confirm: "Ready to ship"
-   - Suggest: "Run `/gsd:ship {N}`"
-</process>
+1. Load phase scope: summaries, UAT results, commits
+2. Spawn reviewer agent to conduct review across 6 areas:
+   - **Code Quality:** Readability, maintainability, consistency
+   - **Architecture:** Design decisions, patterns, scalability
+   - **Tests:** Coverage, quality, edge cases
+   - **Documentation:** Comments, README, API docs
+   - **Security:** Input validation, auth, data protection
+   - **Performance:** Bottlenecks, efficiency, resource usage
+3. Generate review report with findings and recommendations
+4. If critical issues found: create fix plan
+5. If review passes: confirm ready for ship
+6. Update STATE.md with review status
+
+**After this command:** Review complete, issues documented, next steps clear.

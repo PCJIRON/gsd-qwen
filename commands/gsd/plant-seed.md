@@ -1,73 +1,29 @@
 ---
 name: gsd:plant-seed
-description: Capture forward-looking ideas with trigger conditions — surfaces at right milestone
-argument-hint: "<idea>"
+description: Capture forward-looking idea with trigger condition
+argument-hint: "<description>"
 ---
-<context>
-**Arguments:**
-- `idea` — The forward-looking idea to capture
 
-**Purpose:**
-Capture ideas that aren't ready for current milestone but should surface at a future milestone.
-Seeds have trigger conditions that determine when they become relevant.
-</context>
+# /gsd:plant-seed <description>
 
-<objective>
-Plant a seed for future milestones.
+Capture a forward-looking idea with trigger conditions. Surfaces at the right milestone.
 
-**Creates/Updates:**
-- `.planning/SEEDS.md` — Seed registry
+## Arguments
 
-**After this command:**
-- Idea captured with trigger
-- Will surface at appropriate milestone
-- Not in active backlog
-</objective>
+- `description` — The idea
+- Will ask: when should this surface? (which phase/milestone)
 
-<execution_context>
-.planning/SEEDS.md (if exists)
-.planning/STATE.md
-</execution_context>
+## Process
 
-<process>
-1. Get idea from user
-2. Ask clarifying questions:
-   - "When should this surface?" (milestone, condition)
-   - "What triggers this idea?" (feature complete, scale need, etc.)
-   - "Why not now?" (not priority, depends on other work)
-3. Determine trigger type:
-   - **Milestone-based:** "Surface at milestone 3+"
-   - **Feature-based:** "Surface when X is complete"
-   - **Scale-based:** "Surface when users > 1000"
-   - **Time-based:** "Surface in 3 months"
-4. Create seed entry:
+1. Get seed description and trigger condition (which phase/milestone)
+2. Load or create `.planning/SEEDS.md`
+3. Add seed with trigger:
    ```markdown
-   ## Seeds
-   
-   ### {Seed Title}
-   
-   **Idea:**
-   {description}
-   
-   **Trigger:**
-   - Type: {milestone|feature|scale|time}
-   - Condition: {condition}
-   - Surface at: {milestone N / when X}
-   
-   **Why not now:**
-   {rationale}
-   
-   **Planted:** {date}
-   **Status:** Dormant
+   ### Seed: {description}
+   - **Trigger:** Phase {N} / Milestone {M}
+   - **Planted:** {date}
+   - **Status:** Dormant
    ```
-5. Add to SEEDS.md
-6. Do NOT create git commit (seeds are lightweight)
-7. Confirm:
-   - "Seed planted: {title}"
-   - "Will surface when: {trigger}"
-8. Show info:
-   - "View seeds: `/gsd:plant-seed --list`"
-   - "Seeds auto-surface when triggers met"
-9. If idea seems urgent:
-   - "This sounds relevant now. Add to backlog instead?"
-</process>
+4. No git commit
+
+**After this command:** Seed planted, will surface when trigger condition met.

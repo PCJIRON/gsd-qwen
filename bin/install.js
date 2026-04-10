@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
 /**
- * GSD-Qwen Installer
- * 
+ * GSD-Qwen Installer v2.0
+ *
  * Installs GSD extension for Qwen Code
- * Usage: node install.js [--global|--local]
+ * Usage: node install.js [--global|--local] [--uninstall]
  */
 
 const fs = require('fs');
@@ -16,6 +16,7 @@ const cyan = '\x1b[36m';
 const green = '\x1b[32m';
 const yellow = '\x1b[33m';
 const red = '\x1b[31m';
+const dim = '\x1b[2m';
 const reset = '\x1b[0m';
 
 // Parse arguments
@@ -28,15 +29,11 @@ const isHelp = args.includes('--help') || args.includes('-h');
 // Get Qwen config directory
 function getQwenDir(isGlobal) {
   if (isGlobal) {
-    // Global: ~/.qwen/
     return path.join(os.homedir(), '.qwen');
-  } else {
-    // Local: ./.qwen/
-    return path.join(process.cwd(), '.qwen');
   }
+  return path.join(process.cwd(), '.qwen');
 }
 
-// Get extensions directory
 function getExtensionsDir(qwenDir) {
   return path.join(qwenDir, 'extensions');
 }
@@ -44,7 +41,7 @@ function getExtensionsDir(qwenDir) {
 // Show help
 function showHelp() {
   console.log(`
-${cyan}GSD-Qwen Installer${reset}
+${cyan}GSD-Qwen Installer v2.0${reset}
 
 ${yellow}Usage:${reset} node install.js [options]
 
@@ -67,25 +64,24 @@ ${yellow}Examples:${reset}
 }
 
 // Directories to exclude from copy
-const EXCLUDE_DIRS = ['.qwen', 'node_modules', '.git', 'dist'];
+const EXCLUDE_DIRS = ['.qwen', 'node_modules', '.git', 'dist', 'logs', '.venv', '__pycache__'];
 
 // Copy directory recursively
 function copyDir(src, dest) {
   if (!fs.existsSync(dest)) {
     fs.mkdirSync(dest, { recursive: true });
   }
-  
+
   const entries = fs.readdirSync(src, { withFileTypes: true });
-  
+
   for (const entry of entries) {
-    // Skip excluded directories
     if (entry.isDirectory() && EXCLUDE_DIRS.includes(entry.name)) {
       continue;
     }
-    
+
     const srcPath = path.join(src, entry.name);
     const destPath = path.join(dest, entry.name);
-    
+
     if (entry.isDirectory()) {
       copyDir(srcPath, destPath);
     } else {
@@ -98,19 +94,35 @@ function copyDir(src, dest) {
 function removeDir(dir) {
   if (fs.existsSync(dir)) {
     const entries = fs.readdirSync(dir, { withFileTypes: true });
-    
+
     for (const entry of entries) {
       const entryPath = path.join(dir, entry.name);
-      
+
       if (entry.isDirectory()) {
         removeDir(entryPath);
       } else {
         fs.unlinkSync(entryPath);
       }
     }
-    
+
     fs.rmdirSync(dir);
   }
+}
+
+// Count files in directory
+function countFiles(dir) {
+  let count = 0;
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+
+  for (const entry of entries) {
+    if (entry.isDirectory() && !EXCLUDE_DIRS.includes(entry.name)) {
+      count += countFiles(path.join(dir, entry.name));
+    } else {
+      count++;
+    }
+  }
+
+  return count;
 }
 
 // Install GSD
@@ -118,39 +130,49 @@ function install(isGlobal) {
   const qwenDir = getQwenDir(isGlobal);
   const extensionsDir = getExtensionsDir(qwenDir);
   const gsdExtensionDir = path.join(extensionsDir, 'gsd-qwen');
-  // Source dir is parent of bin/ (where install.js lives)
   const sourceDir = path.join(__dirname, '..');
-  
-  console.log(`\n${cyan}Installing GSD-Qwen...${reset}\n`);
-  
+
+  console.log(`\n${cyan}Installing GSD-Qwen v2.0...${reset}\n`);
+
+  // Validate source directory
+  const manifestPath = path.join(sourceDir, 'qwen-extension.json');
+  if (!fs.existsSync(manifestPath)) {
+    console.log(`${red}✗ Error: qwen-extension.json not found in source directory${reset}\n`);
+    process.exit(1);
+  }
+
   // Create extensions directory
   if (!fs.existsSync(extensionsDir)) {
     console.log(`  Creating extensions directory: ${extensionsDir}`);
     fs.mkdirSync(extensionsDir, { recursive: true });
   }
-  
+
   // Remove existing installation
   if (fs.existsSync(gsdExtensionDir)) {
     console.log(`  Removing existing installation...`);
     removeDir(gsdExtensionDir);
   }
-  
+
   // Copy extension files
   console.log(`  Copying extension files...`);
   copyDir(sourceDir, gsdExtensionDir);
-  
+
+  // Count copied files
+  const fileCount = countFiles(gsdExtensionDir);
+
   // Verify installation
-  const manifestPath = path.join(gsdExtensionDir, 'qwen-extension.json');
-  if (fs.existsSync(manifestPath)) {
+  const destManifestPath = path.join(gsdExtensionDir, 'qwen-extension.json');
+  if (fs.existsSync(destManifestPath)) {
     console.log(`\n${green}✓ Installation successful!${reset}\n`);
-    console.log(`  Installed to: ${gsdExtensionDir}\n`);
+    console.log(`  Installed to: ${gsdExtensionDir}`);
+    console.log(`  Files copied: ${fileCount}\n`);
     console.log(`  ${yellow}Next steps:${reset}\n`);
     console.log(`  1. Restart Qwen Code`);
     console.log(`  2. Run ${cyan}/gsd:help${reset} to see all commands`);
     console.log(`  3. Run ${cyan}/gsd:new-project${reset} to start\n`);
   } else {
     console.log(`\n${red}✗ Installation failed!${reset}`);
-    console.log(`  Manifest not found: ${manifestPath}\n`);
+    console.log(`  Manifest not found: ${destManifestPath}\n`);
     process.exit(1);
   }
 }
@@ -160,17 +182,16 @@ function uninstall(isGlobal) {
   const qwenDir = getQwenDir(isGlobal);
   const extensionsDir = getExtensionsDir(qwenDir);
   const gsdExtensionDir = path.join(extensionsDir, 'gsd-qwen');
-  
+
   console.log(`\n${cyan}Uninstalling GSD-Qwen...${reset}\n`);
-  
+
   if (!fs.existsSync(gsdExtensionDir)) {
     console.log(`  ${yellow}GSD-Qwen is not installed${reset}\n`);
     return;
   }
-  
-  // Remove extension
+
   removeDir(gsdExtensionDir);
-  
+
   console.log(`  ${green}✓ Uninstallation successful!${reset}\n`);
   console.log(`  Removed: ${gsdExtensionDir}\n`);
 }
@@ -181,13 +202,13 @@ function main() {
     showHelp();
     return;
   }
-  
+
   if (!isGlobal && !isLocal) {
     console.log(`\n${yellow}Please specify --global or --local${reset}\n`);
     showHelp();
     process.exit(1);
   }
-  
+
   if (isUninstall) {
     uninstall(isGlobal);
   } else {
@@ -195,5 +216,4 @@ function main() {
   }
 }
 
-// Run
 main();

@@ -1,39 +1,43 @@
 ---
 name: gsd:verify-work
-description: User acceptance testing for completed work
+description: User acceptance testing for completed phase
 argument-hint: "[N]"
 ---
-<context>
-**Arguments:**
-- `N` — Phase number (default: last executed phase)
 
-**Purpose:**
-Manual user acceptance testing to verify delivered work matches requirements.
-</context>
+# /gsd:verify-work [N]
 
-<objective>
-Verify completed work through user acceptance testing.
+Perform user acceptance testing (UAT) on completed phase. Tests each requirement against delivered work and documents PASS/FAIL results.
 
-**Creates:**
-- `.planning/{N}-UAT.md` — UAT results
+## Arguments
 
-**After this command:**
-- If PASS: Run `/gsd:ship {N}` to create PR
-- If FAIL: Run `/gsd:debug` to diagnose
-</objective>
+- `N` — Phase number (defaults to current phase from STATE.md)
 
-<execution_context>
-@workflows/verify-work.md
-@agents/gsd-verifier.md
-</execution_context>
+## What This Creates
 
-<process>
-Execute the verify-work workflow from @workflows/verify-work.md.
+- `.planning/{N}-UAT.md` — UAT report with PASS/FAIL results
 
-1. Load requirements from REQUIREMENTS.md
-2. Load delivered work from phase summaries
-3. Test each requirement against delivered work
-4. Document results in {N}-UAT.md
-5. Mark as PASS or FAIL
-6. Update STATE.md
-</process>
+## Process
+
+1. Read `.planning/STATE.md` for current position
+2. Load REQUIREMENTS.md for phase requirements
+3. Load all `{N}-*-SUMMARY.md` files for deliverables
+4. Load `{N}-VERIFICATION.md` for integration check results
+5. Spawn `gsd-verifier` agent to conduct UAT:
+   - Test each requirement systematically
+   - Record PASS/FAIL/PARTIAL with evidence
+   - Document test methods and file references
+6. Create `{N}-UAT.md` with results:
+   ```markdown
+   # UAT: Phase {N}
+   ## Overall Result: PASS/FAIL
+   ## Requirements Tested
+   ### Requirement 1: {description}
+   - **Status:** PASS/FAIL/PARTIAL
+   - **Evidence:** {files, output}
+   ```
+7. If FAIL: recommend `/gsd:debug` or create fix plan
+8. If PASS: recommend `/gsd:ship {N}`
+9. Update STATE.md with UAT results
+10. Commit: `[GSD-uat] Phase {N} UAT {result}`
+
+**After this command:** If PASS, run `/gsd:ship {N}`. If FAIL, run `/gsd:debug`.

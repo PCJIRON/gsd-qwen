@@ -1,36 +1,29 @@
 ---
 name: gsd:fast
-description: Inline trivial tasks (executes immediately)
+description: Trivial inline tasks
 argument-hint: "<text>"
 ---
-<context>
-**Arguments:**
-- `text` — Task to execute
 
-**Purpose:**
-Trivial tasks that execute immediately without planning.
-No commit, no summary — just do it.
-</context>
+# /gsd:fast <text>
 
-<objective>
-Execute a trivial task immediately.
+Execute trivial inline tasks with no commit and no summary — just execute.
 
-**Use for:**
-- One-line changes
-- Simple file edits
+## Arguments
+
+- `text` — What to do
+
+## Use For
+
+- Trivial edits (rename a variable, fix a typo)
 - Quick lookups
-- Small commands
+- One-line changes
 
-**Not for:**
-- Multi-step tasks
-- Features requiring planning
-- Tasks needing verification
-</objective>
+## Process
 
-<process>
-1. Parse task text
+1. Parse the inline task
 2. Execute immediately
-3. No commit (unless user requests)
-4. No summary
-5. Output result
-</process>
+3. No git commit
+4. No summary file
+5. No state update
+
+**After this command:** Task done, nothing else created.

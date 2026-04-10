@@ -3,37 +3,44 @@ name: gsd:discuss-phase
 description: Capture implementation decisions before planning
 argument-hint: "[N]"
 ---
-<context>
-**Arguments:**
-- `N` — Phase number (default: current phase)
 
-**Purpose:**
-Before creating a plan, capture user's implementation preferences:
-- UI/UX decisions
-- API design choices
-- Content requirements
-- Technical constraints
-</context>
+# /gsd:discuss-phase [N]
 
-<objective>
-Capture and document implementation decisions for a phase.
+Capture implementation decisions before planning. Creates `{N}-CONTEXT.md` with architectural choices, technology decisions, and implementation preferences.
 
-**Creates:**
-- `.planning/{N}-CONTEXT.md` — Implementation decisions and vision
+## Arguments
 
-**After this command:** Run `/gsd:plan-phase {N}` to create the plan.
-</objective>
+- `N` — Phase number (defaults to current phase from STATE.md)
 
-<execution_context>
-@workflows/discuss-phase.md
-@templates/context.md
-</execution_context>
+## What This Creates
 
-<process>
-Execute the discuss-phase workflow from @workflows/discuss-phase.md.
+- `.planning/{N}-CONTEXT.md` — Implementation decision document
 
-1. Determine phase number (from argument or STATE.md)
-2. Ask clarifying questions about implementation preferences
-3. Document decisions in {N}-CONTEXT.md
-4. Update STATE.md with phase position
-</process>
+## Process
+
+1. Read `.planning/STATE.md` for current position
+2. Read `.planning/ROADMAP.md` for phase goals
+3. Read `.planning/REQUIREMENTS.md` for requirements
+4. Identify decision areas for this phase:
+   - Architecture choices
+   - Library/technology selections
+   - API design decisions
+   - Data model choices
+   - UI/UX decisions
+   - Testing strategy
+5. Ask the user about each decision area
+6. Document decisions in `{N}-CONTEXT.md`:
+   ```markdown
+   # Phase {N} Context
+
+   ## Decisions
+   ### Decision 1: {topic}
+   - **Decision:** {what was decided}
+   - **Rationale:** {why}
+   - **Alternatives considered:** {what else}
+   - **Trade-offs:** {pros/cons}
+   ```
+7. Update STATE.md with context capture date
+8. Commit: `[GSD-context] Phase {N} decisions captured`
+
+**After this command:** Run `/gsd:plan-phase {N}` to create atomic task plans.

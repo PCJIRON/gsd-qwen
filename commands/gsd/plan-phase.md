@@ -1,39 +1,35 @@
 ---
 name: gsd:plan-phase
-description: Research and create atomic task plans for a phase
+description: Create atomic task plans for a phase
 argument-hint: "[N]"
 ---
-<context>
-**Arguments:**
-- `N` — Phase number (default: next planned phase)
 
-**Purpose:**
-Research implementation approaches and create detailed, atomic task plans.
-</context>
+# /gsd:plan-phase [N]
 
-<objective>
-Create atomic, executable task plans for a phase.
+Research and create atomic task plans for a phase. Spawns specialized agents to research implementation approach, create atomic plans, and validate plans against requirements.
 
-**Creates:**
+## Arguments
+
+- `N` — Phase number (defaults to current phase from STATE.md)
+
+## What This Creates
+
 - `.planning/{N}-RESEARCH.md` — Implementation research
-- `.planning/{N}-{taskNum}-PLAN.md` — Atomic task plans
+- `.planning/{N}-{planNum}-PLAN.md` — Atomic task plans (one per plan)
+- `.planning/{N}-{planNum}-VALIDATION.md` — Plan validation reports
 
-**After this command:** Run `/gsd:execute-phase {N}` to execute plans.
-</objective>
+## Process
 
-<execution_context>
-@workflows/plan-phase.md
-@templates/plan.md
-@agents/gsd-planner.md
-</execution_context>
+1. Read `.planning/STATE.md` for current position
+2. Read `.planning/ROADMAP.md` for phase goals
+3. Read `{N}-CONTEXT.md` for implementation decisions
+4. Read REQUIREMENTS.md for requirements
+5. Spawn `gsd-phase-researcher` to research implementation approach → creates `{N}-RESEARCH.md`
+6. Spawn `gsd-planner` to create atomic task plans → creates `{N}-{planNum}-PLAN.md` files
+7. Spawn `gsd-plan-checker` to validate each plan → creates `{N}-{planNum}-VALIDATION.md`
+8. If validation fails, iterate plan checker (max 2 iterations)
+9. Group plans into dependency-aware waves
+10. Update STATE.md with planning completion
+11. Commit: `[GSD-plan] Phase {N} plans created`
 
-<process>
-Execute the plan-phase workflow from @workflows/plan-phase.md.
-
-1. Load phase from ROADMAP.md
-2. Research implementation approaches ({N}-RESEARCH.md)
-3. Create atomic task plans with XML structure
-4. Each plan has: objective, tasks, verification, output spec
-5. Verify plans against requirements
-6. Update STATE.md
-</process>
+**After this command:** Run `/gsd:execute-phase {N}` to execute the plans.

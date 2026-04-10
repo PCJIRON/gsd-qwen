@@ -3,37 +3,25 @@ name: gsd:map-codebase
 description: Analyze existing codebase before new-project (brownfield projects)
 argument-hint: "[area]"
 ---
-<context>
-**Arguments:**
+
+# /gsd:map-codebase
+
+## Arguments
+
 - `area` — Optional specific area to analyze (e.g., "auth", "api", "frontend")
 
-**Purpose:**
-Analyze an existing codebase before starting a new project/milestone.
-Understands stack, architecture, conventions, and concerns.
-</context>
+## Purpose
 
-<objective>
-Map existing codebase structure and patterns.
+Analyze an existing codebase before starting a new project/milestone. Understands stack, architecture, conventions, and concerns.
 
-**Creates:**
+## What This Creates
+
 - `.planning/CODEBASE-MAP.md` — Codebase analysis
 - `.planning/STACK.md` — Tech stack documentation
 - `.planning/ARCHITECTURE.md` — Architecture overview
 
-**After this command:**
-- Codebase understood
-- Ready for `/gsd:new-project` with context
-- Planning will use existing patterns
-</objective>
+## Process
 
-<execution_context>
-./ (project root)
-**/*.{ts,js,py,go,rs,etc} (source files)
-package.json, Cargo.toml, etc (config files)
-@agents/gsd-codebase-mapper.md
-</execution_context>
-
-<process>
 1. Scan project structure:
    - Directory structure
    - File types and languages
@@ -62,22 +50,22 @@ package.json, Cargo.toml, etc (config files)
 7. Create CODEBASE-MAP.md:
    ```markdown
    # Codebase Map
-   
+
    ## Stack
    - **Languages:** TypeScript, Python
    - **Frameworks:** React, Express
    - **Database:** PostgreSQL
-   
+
    ## Architecture
    - **Pattern:** MVC
    - **Entry:** src/index.ts
    - **Modules:** auth, api, db
-   
+
    ## Conventions
    - **Naming:** camelCase for variables
    - **Tests:** __tests__/ alongside source
    - **Imports:** Absolute paths from src/
-   
+
    ## Concerns
    - ⚠️ auth module has no tests
    - ⚠️ package.json has 5 outdated deps
@@ -89,4 +77,9 @@ package.json, Cargo.toml, etc (config files)
 11. Suggest next step:
     - "Run `/gsd:new-project` to start with codebase context"
     - "Planning will use your existing patterns"
-</process>
+
+## After this command
+
+- Codebase understood
+- Ready for `/gsd:new-project` with context
+- Planning will use existing patterns

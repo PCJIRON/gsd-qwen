@@ -1,40 +1,26 @@
 ---
 name: gsd:next
-description: Auto-detect and run the next workflow step
+description: Auto-detect and run next workflow step
 ---
-<context>
-**Purpose:**
-Automatically detect and execute the next step in the GSD workflow.
 
-**Workflow Order:**
-1. new-project → 2. discuss-phase → 3. plan-phase → 4. execute-phase → 5. verify-work → 6. ship
-</context>
+# /gsd:next
 
-<objective>
-Auto-detect and run the next workflow step.
+Auto-detect and run the next workflow step by reading STATE.md position.
 
-**Behavior:**
-- Reads STATE.md to determine current position
-- Runs the appropriate command for next step
-- Updates STATE.md after completion
-</objective>
+## Process
 
-<execution_context>
-.planning/STATE.md
-.planning/ROADMAP.md
-</execution_context>
+1. Read `.planning/STATE.md` for current position
+2. Read `.planning/ROADMAP.md` for phase structure
+3. Determine next step based on workflow position:
+   - If no `.planning/` exists → suggest `/gsd:new-project`
+   - If phase not discussed → suggest `/gsd:discuss-phase {N}`
+   - If phase not planned → suggest `/gsd:plan-phase {N}`
+   - If phase not executed → suggest `/gsd:execute-phase {N}`
+   - If phase not verified → suggest `/gsd:verify-work {N}`
+   - If phase not shipped → suggest `/gsd:ship {N}`
+   - If phase complete → suggest next phase
+4. Show the user what the next step is
+5. Ask for confirmation or run it automatically
+6. Execute the next step
 
-<process>
-1. Load STATE.md
-2. Determine current workflow position
-3. Identify next step:
-   - No project? → Run `/gsd:new-project`
-   - Phase not discussed? → Run `/gsd:discuss-phase N`
-   - Phase not planned? → Run `/gsd:plan-phase N`
-   - Phase not executed? → Run `/gsd:execute-phase N`
-   - Phase not verified? → Run `/gsd:verify-work N`
-   - Phase not shipped? → Run `/gsd:ship N`
-   - All phases done? → Congratulate user
-4. Execute the next command
-5. Update STATE.md
-</process>
+**Output:** Shows current position and next recommended action, then executes or waits for confirmation.
